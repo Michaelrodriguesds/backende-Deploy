@@ -1,0 +1,20 @@
+# Ignorar dependências do Node.js
+node_modules/
+
+# Ignorar arquivos de ambiente
+.env
+
+# Ignorar arquivos de log
+*.log
+
+# Ignorar diretórios de build
+dist/
+build/
+
+# Ignorar arquivos de lock
+package-lock.json
+yarn.lock
+
+# Ignorar arquivos de configuração do sistema operacional
+.DS_Store
+Thumbs.db

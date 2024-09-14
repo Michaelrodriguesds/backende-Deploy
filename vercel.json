@@ -1,0 +1,17 @@
+{
+  "version": 2,
+  "builds": [
+    { "src": "index.js", "use": "@vercel/node" }
+  ],
+  "routes": [
+    { "src": "/api/(.*)", "dest": "/index.js" }
+  ],
+  "env": {
+    "MONGO_URI": "@mongo-uri",
+    "JWT_SECRET": "@jwt-secret",
+    "USER_EMAIL_1": "@user-email-1",
+    "USER_PASSWORD_1": "@user-password-1",
+    "USER_EMAIL_2": "@user-email-2",
+    "USER_PASSWORD_2": "@user-password-2"
+  }
+}

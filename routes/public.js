@@ -3,6 +3,7 @@ import { getOffers, getProcedures, getMessages, postMessage } from '../controlle
 
 const router = express.Router();
 
+// Rotas públicas
 router.get('/offers', getOffers);
 router.get('/procedures', getProcedures);
 router.get('/messages', getMessages);

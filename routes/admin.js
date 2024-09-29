@@ -1,27 +1,12 @@
 import express from 'express';
-import {
-  login,
-  addOffer,
-  addProcedure,
-  approveMessage,
-  deleteOffer,
-  deleteProcedure,
-  deleteMessage,
-  getMessages,
-  addMessage
-} from '../controllers/adminController.js';
-import auth from '../middleware/auth.js';
+import { login, addOffer, deleteOffer, approveMessage } from '../controllers/adminController.js';
 
 const router = express.Router();
 
+// Rotas administrativas
 router.post('/login', login);
-router.post('/offer', auth, addOffer);
-router.delete('/offer/:id', auth, deleteOffer);
-router.post('/procedure', auth, addProcedure);
-router.delete('/procedure/:id', auth, deleteProcedure);
-router.post('/message', auth, addMessage);  // Adicionando a rota para adicionar mensagem
-router.put('/message/:id/approve', auth, approveMessage);
-router.delete('/message/:id', auth, deleteMessage);
-router.get('/messages', auth, getMessages);
+router.post('/offers', addOffer);
+router.delete('/offers/:id', deleteOffer);
+router.post('/messages/approve/:id', approveMessage);
 
 export default router;

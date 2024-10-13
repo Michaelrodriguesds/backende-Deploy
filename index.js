@@ -1,3 +1,5 @@
+// backend/index.js
+
 import express from 'express';
 import cors from 'cors';
 import bodyParser from 'body-parser';
@@ -8,7 +10,12 @@ import adminRoutes from './routes/admin.js'; // Rotas administrativas
 const app = express();
 
 // Conectar ao banco de dados
-connectDB();
+connectDB().then(() => {
+  console.log('MongoDB conectado com sucesso');
+}).catch(err => {
+  console.error('Erro ao conectar ao MongoDB:', err.message);
+  process.exit(1); // Saia do processo em caso de erro na conexão
+});
 
 // Middleware
 app.use(cors()); // Habilitar CORS para permitir requisições de diferentes origens

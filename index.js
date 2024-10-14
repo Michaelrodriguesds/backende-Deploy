@@ -5,8 +5,13 @@ import connectDB from './config.js'; // Função para conectar ao banco de dados
 import publicRoutes from './routes/public.js'; // Rotas públicas
 import adminRoutes from './routes/admin.js'; // Rotas administrativas
 import path from 'path';
+import { fileURLToPath } from 'url'; // Importando fileURLToPath
 
 const app = express();
+
+// Obtendo o caminho do diretório atual
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 // Conectar ao banco de dados
 connectDB().then(() => {

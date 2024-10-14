@@ -3,6 +3,8 @@ import Procedure from '../models/procedure.js';
 import Message from '../models/message.js';  
 import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
+import fs from 'fs';
+import path from 'path';
 
 dotenv.config(); // Carregar variáveis de ambiente
 
@@ -63,9 +65,22 @@ export const deleteOffer = async (req, res) => {
 // Função para adicionar um procedimento
 export const addProcedure = async (req, res) => {
   try {
-    const { description, price } = req.body;
-    const newProcedure = new Procedure({ description, price });
+    const { name, metadata, price } = req.body; // Lê o nome, metadata e preço do corpo da requisição
+    const image = req.file ? `/uploads/procedures/${req.file.filename}` : '/uploads/procedures/default.png'; // Caminho público da imagem para o frontend
+
+    // Verifique se os campos obrigatórios estão presentes
+    if (!name || !metadata || !price) {
+      return res.status(400).json({ message: 'Todos os campos (name, metadata, price) são obrigatórios.' });
+    }
+
+    const newProcedure = new Procedure({
+      name,
+      metadata,
+      price,
+      image
+    });
     await newProcedure.save();
+
     res.status(201).json(newProcedure);
   } catch (error) {
     console.error('Erro ao adicionar procedimento:', error.message);
@@ -104,9 +119,7 @@ export const approveMessage = async (req, res) => {
       console.error('Erro ao aprovar mensagem:', error.message);
       res.status(500).json({ message: 'Erro ao aprovar mensagem' });
   }
-};
-
-
+}
 
 // Função para excluir uma mensagem
 export const deleteMessage = async (req, res) => {

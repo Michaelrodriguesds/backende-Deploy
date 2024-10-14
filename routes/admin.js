@@ -1,4 +1,7 @@
+// backend/routes/admin.js
+
 import express from 'express';
+import upload from '../middleware/upload.js'; // Importando o middleware de upload corretamente
 import {
   login,
   addOffer,
@@ -22,7 +25,7 @@ router.post('/offer', auth, addOffer);              // Add offer
 router.delete('/offer/:id', auth, deleteOffer);     // Delete offer by ID
 
 // Routes for procedures
-router.post('/procedure', auth, addProcedure);      // Add procedure
+router.post('/procedure', auth, upload.single('image'), addProcedure);  // Add procedure com upload de imagem
 router.delete('/procedure/:id', auth, deleteProcedure); // Delete procedure by ID
 
 // Routes for messages

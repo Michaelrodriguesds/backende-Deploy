@@ -16,11 +16,11 @@ export const getOffers = async (req, res) => {
 // Função para obter procedimentos
 export const getProcedures = async (req, res) => {
   try {
-    const procedures = await Procedure.find();
-    res.json(procedures);
+    const procedures = await Procedure.find(); // Obtém todos os procedimentos do banco de dados
+    res.status(200).json(procedures); // Retorna os procedimentos como JSON
   } catch (error) {
-    console.error('Erro ao obter procedimentos:', error.message);
-    res.status(500).json({ message: 'Erro ao obter procedimentos' });
+    console.error(error); // Log do erro no servidor
+    res.status(500).json({ message: 'Erro ao obter procedimentos.' }); // Retorna uma mensagem de erro
   }
 };
 

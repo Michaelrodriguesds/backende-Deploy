@@ -1,7 +1,4 @@
-// backend/routes/admin.js
-
 import express from 'express';
-import upload from '../middleware/upload.js'; // Importando o middleware de upload corretamente
 import {
   login,
   addOffer,
@@ -13,25 +10,25 @@ import {
   getMessages,
   addMessage
 } from '../controllers/adminController.js';
-import auth from '../middleware/auth.js';
+import auth from '../middleware/auth.js'; // Middleware para autenticação de rotas
 
-const router = express.Router();
+const router = express.Router(); // Inicializando o roteador
 
 // Route for user login
-router.post('/login', login);
+router.post('/login', login); // Rota para login de administrador
 
 // Routes for offers
-router.post('/offer', auth, addOffer);              // Add offer
-router.delete('/offer/:id', auth, deleteOffer);     // Delete offer by ID
+router.post('/offer', auth, addOffer);              // Rota para adicionar uma nova oferta (proteção de autenticação)
+router.delete('/offer/:id', auth, deleteOffer);     // Rota para deletar uma oferta por ID
 
-// Routes for procedures
-router.post('/procedure', auth, upload.single('image'), addProcedure);  // Add procedure com upload de imagem
-router.delete('/procedure/:id', auth, deleteProcedure); // Delete procedure by ID
+
+router.post('/procedure', auth, addProcedure);      
+router.delete('/procedure/:id', auth, deleteProcedure); // Rota para deletar um procedimento por ID
 
 // Routes for messages
-router.post('/message', auth, addMessage);          // Add message
-router.put('/message/:id/approve', auth, approveMessage); // Approve message by ID
-router.delete('/message/:id', auth, deleteMessage); // Delete message by ID
-router.get('/messages', auth, getMessages);         // Get all messages
+router.post('/message', auth, addMessage);          // Rota para adicionar uma nova mensagem
+router.put('/message/:id/approve', auth, approveMessage); // Rota para aprovar uma mensagem por ID
+router.delete('/message/:id', auth, deleteMessage); // Rota para deletar uma mensagem por ID
+router.get('/messages', auth, getMessages);         // Rota para listar todas as mensagens
 
 export default router;

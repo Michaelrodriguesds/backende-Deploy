@@ -37,8 +37,18 @@ export const login = async (req, res) => {
 // Função para adicionar uma oferta
 export const addOffer = async (req, res) => {
   try {
-    const { title, description, price, expiresAt } = req.body;
-    const newOffer = new Offer({ title, description, price, expiresAt });
+    // Desestrutura os campos que correspondem ao modelo
+    const { nome, descricao, valor, data_inicio, data_fim, imagem } = req.body;
+
+    const newOffer = new Offer({ 
+      nome, 
+      descricao, 
+      valor, 
+      data_inicio, 
+      data_fim, 
+      imagem 
+    });
+
     await newOffer.save();
     res.status(201).json(newOffer); // Responde com a nova oferta criada
   } catch (error) {
@@ -65,27 +75,31 @@ export const deleteOffer = async (req, res) => {
 // Função para adicionar um procedimento
 export const addProcedure = async (req, res) => {
   try {
-    const { name, metadata, price, imageUrl } = req.body; // Lê o nome, método, preço e URL da imagem do corpo da requisição
+    const { name, metadata, price, image } = req.body; // Lê os campos do corpo da requisição
 
-    // Verifique se os campos obrigatórios estão presentes (removendo imageUrl da verificação)
+    // Verifica se os campos obrigatórios estão presentes
     if (!name || !metadata || !price) {
-      return res.status(400).json({ message: 'Todos os campos (name, metadata, price) são obrigatórios.' });
+      return res.status(400).json({ message: 'Os campos name, metadata e price são obrigatórios.' });
     }
+
+    // Verifica se a URL da imagem foi fornecida, se não, usa a imagem padrão
+    const procedureImage = image || 'img_procedimentos/default.png';
 
     const newProcedure = new Procedure({
       name,
       metadata,
       price,
-      image: imageUrl || null // Agora salvamos diretamente a URL da imagem, ou null se não estiver presente
+      image: procedureImage // Usa a URL fornecida ou a imagem padrão
     });
-    await newProcedure.save(); // Salva o novo procedimento no banco de dados
 
+    await newProcedure.save();
     res.status(201).json(newProcedure); // Retorna o procedimento criado
   } catch (error) {
-    console.error('Erro ao adicionar procedimento:', error.message);
-    res.status(500).json({ message: 'Erro ao adicionar procedimento' });
+    console.error('Erro ao adicionar procedimento:', error); // Log detalhado do erro
+    res.status(500).json({ message: 'Erro ao adicionar procedimento', error: error.message });
   }
 };
+
 
 
 // Função para excluir um procedimento
@@ -113,7 +127,7 @@ export const approveMessage = async (req, res) => {
       return res.status(404).json({ message: 'Mensagem não encontrada' });
     }
     message.approved = true; // Marca a mensagem como aprovada
-    await message.save(); // Salva a alteração no banco de dados
+    await message.save();
     res.json(message); // Retorna a mensagem aprovada
   } catch (error) {
     console.error('Erro ao aprovar mensagem:', error.message);

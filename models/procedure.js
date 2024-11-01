@@ -17,8 +17,10 @@ const procedureSchema = new mongoose.Schema({
   image: {
     type: String,   // Armazena a URL da imagem do procedimento
     default: 'img_procedimentos/default.png', // Caminho padrão da imagem caso nenhum seja fornecido
-    // Remover a obrigatoriedade do campo `image`
+    required: false, // Remover a obrigatoriedade do campo `image`
   },
+}, {
+  versionKey: false, // Remove a propriedade __v que o Mongoose adiciona por padrão
 });
 
 // Criação do modelo a partir do esquema definido

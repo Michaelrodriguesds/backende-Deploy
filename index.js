@@ -1,35 +1,38 @@
 import express from 'express';
 import cors from 'cors';
 import bodyParser from 'body-parser';
-import connectDB from './config.js'; // Função para conectar ao banco de dados
-import publicRoutes from './routes/public.js'; // Rotas públicas para os usuários verem os procedimentos
-import adminRoutes from './routes/admin.js'; // Rotas administrativas para gerenciar os procedimentos
-import path from 'path';
-import { fileURLToPath } from 'url'; // Importando fileURLToPath para lidar com caminhos de arquivos
+import connectDB from './config.js';
+import publicRoutes from './routes/public.js';
+import adminRoutes from './routes/admin.js';
+import helmet from 'helmet'; // Segurança adicional
 
-const app = express(); // Inicializando o app com express
 
-// Obtendo o caminho do diretório atual, necessário para servir arquivos estáticos corretamente
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+const app = express();
+
 
 // Conectar ao banco de dados
 connectDB().then(() => {
-  console.log('MongoDB conectado com sucesso'); // Mensagem ao conectar
+  console.log('MongoDB conectado com sucesso');
 }).catch(err => {
-  console.error('Erro ao conectar ao MongoDB:', err.message); // Mostra erro no console se falhar
-  process.exit(1); // Encerra o processo em caso de erro na conexão com o banco de dados
+  console.error('Erro ao conectar ao MongoDB:', err.message);
+  process.exit(1);
 });
 
-// Middlewares importantes
-app.use(cors()); // Habilitar CORS para permitir que o frontend faça requisições para o backend de um domínio diferente
-app.use(bodyParser.json()); // Middleware para permitir que o servidor entenda requisições com JSON no corpo
+// Middlewares de segurança e configuração
+app.use(cors()); // Habilitar CORS
+app.use(helmet()); // Adicionar headers de segurança
+app.use(bodyParser.json()); // Parse JSON requests
 
+// Rotas
+app.use('/api/public', publicRoutes);
+app.use('/api/admin', adminRoutes);
 
-// Montando as rotas
-app.use('/api/public', publicRoutes); // Rotas acessíveis publicamente (ex. exibição de procedimentos)
-app.use('/api/admin', adminRoutes); // Rotas protegidas, usadas para operações de administrador (criação, edição e remoção de procedimentos)
+// Middleware de tratamento global de erros
+app.use((err, req, res, next) => {
+  console.error('Erro no servidor:', err.stack); // Log do erro
+  res.status(500).json({ message: 'Erro no servidor, por favor, tente novamente mais tarde.' });
+});
 
 // Iniciar o servidor e definir a porta
-const PORT = process.env.PORT || 5000; // Porta do servidor, com fallback para 5000 se não for definida
-app.listen(PORT, () => console.log(`Servidor rodando na porta ${PORT}`)); // Mensagem informando que o servidor está funcionando
+const PORT = process.env.PORT || 5000;
+app.listen(PORT, () => console.log(`Servidor rodando na porta ${PORT}`));
